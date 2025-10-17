@@ -29,7 +29,7 @@ public class Calculator {
             System.out.println("입력된 사칙연산 기호 = " + operator);
 
             // ######################### 사칙 연산 #########################
-            int result = 0;
+            double result = 0;  // 나눗셈을 위해 int result = 0 -> double result = 0 #2025-10-17, LV1 완료 이후
             /* 제어문을 활용하여 위 요구사항을 만족할 수 있게 구현합니다.*/
             try { //연산 오류가 발생할 경우 해당 오류에 대한 내용을 정제하여 출력
                 if (operator == '+') {
@@ -39,7 +39,7 @@ public class Calculator {
                 } else if (operator == '*') {
                     result = firstNum * secondNum;
                 } else if (operator == '/') {
-                    result = firstNum / secondNum;
+                    result = (double) firstNum / secondNum; // 소숫점 계산을 위해 (double) #2025-10-17, LV1 완료 이후
 //        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 것...
 //            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보임
 //            return;
@@ -51,7 +51,6 @@ public class Calculator {
             } catch (ArithmeticException e) {
                 if (operator == '/' && secondNum == 0) {
                     System.out.println("나눗셈 분모에 0을 입력해서는 안됨");
-
                 } else {
                     System.out.println("연산 오류 발생");
                 }
