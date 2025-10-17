@@ -40,8 +40,8 @@ public class Calculator {
                     result = firstNum * secondNum;
                 } else if (operator == '/') {
                     result = firstNum / secondNum;
-//        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 거라네...
-//            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보인다 ㅇㅇ
+//        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 것...
+//            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보임
 //            return;
                 } else {
                     System.out.println("사칙연산 입력 오류");
