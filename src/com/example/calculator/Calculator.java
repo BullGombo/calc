@@ -68,4 +68,55 @@ public class Calculator {
         history.add(record);
     }
 
+    // #2025-10-18   ( App.java에서 가져오고, static 등을 조금 수정함 )
+    // 연산 메서드 분리, 결과 출력, 결과를 컬렉션 클래스로 반환
+    // ######################### 연산 / 저장 메서드 #########################
+    public void calculate(int firstNum, int secondNum, char operator) {
+
+//        Calculator calcResult = new Calculator();
+
+        // 입력한 숫자, 기호, 결과를 객체에 계속 누적
+        setFirstNum(firstNum);
+        setSecondNum(secondNum);
+        setOperator(operator);
+        // 나눗셈을 위해 int result = 0 -> double result = 0
+        double result = 0;
+
+        // ------------------- 사칙 연산 -------------------
+        try { //연산 오류가 발생할 경우 해당 오류에 대한 내용을 정제하여 출력
+            if (operator == '+') {
+                result = firstNum + secondNum;
+            } else if (operator == '-') {
+                result = firstNum - secondNum;
+            } else if (operator == '*') {
+                result = firstNum * secondNum;
+            } else if (operator == '/') {
+                result = (double) firstNum / secondNum; // 소숫점 계산을 위해 (double) #2025-10-17, LV1 완료 이후
+//        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 것...
+//            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보임
+//            return;
+            } else {
+                System.out.println("사칙연산 입력 오류");
+                return;
+            }
+//            // 콘솔에 결과 출력 -> '보기좋은 코드'를 작성하기 위해 메인 메서드로 옮김
+//            System.out.println("결과: " + firstNum + operator + secondNum + " = " + result);
+
+            // result는 다른 세 변수들과 다르게 연산 이후에 도출 되기 때문에, 연산 이후 set
+            setResult(result);
+
+            // 히스토리 타입의 컬렉션에 모든 요소 저장 (addHistory)
+            String record = firstNum + " " + operator + " " + secondNum + " = " + result;
+            addHistory(record);
+
+        } catch (ArithmeticException e) {
+            if (operator == '/' && secondNum == 0) {
+                System.out.println("나눗셈 분모에 0을 입력해서는 안됨");
+            } else {
+                System.out.println("연산 오류 발생");
+            }
+        }
+        // return 연산 결과 반환 위치 옮김
+    }
+
 }

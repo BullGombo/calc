@@ -34,7 +34,8 @@ public class App {
             // 결과를 히스토리 컬렉션 객체에 담아서 반환 #2025-10-17
 //          Calculator calcResult = calculate(firstNum, secondNum, operator);
             // calculate() 결과를 공유 객체 calcResult에 누적 저장 #2025-10-17
-            calculate(firstNum, secondNum, operator);
+            // Calculator 클래스의 calculate 메서드 호출 #2025-10-18
+            calcResult.calculate(firstNum, secondNum, operator);
 
             // 결과 출력 (입력했던거 보이게) #2025-10-17
             // System.out.println("결과: " + result);
@@ -72,56 +73,57 @@ public class App {
 //        return !insertExit.equals("exit");  // !true = false 라서 이런식으로
     }
 
-    // #2025-10-17
-    // 연산 메서드 분리, 결과 출력, 결과를 컬렉션 클래스로 반환
-    // ######################### 연산 / 저장 메서드 #########################
-    private static void calculate(int firstNum, int secondNum, char operator) {
-
-//        Calculator calcResult = new Calculator();
-
-        // 입력한 숫자, 기호, 결과를 객체에 계속 누적
-        calcResult.setFirstNum(firstNum);
-        calcResult.setSecondNum(secondNum);
-        calcResult.setOperator(operator);
-        // 나눗셈을 위해 int result = 0 -> double result = 0
-        double result = 0;
-
-        // ------------------- 사칙 연산 -------------------
-        try { //연산 오류가 발생할 경우 해당 오류에 대한 내용을 정제하여 출력
-            if (operator == '+') {
-                result = firstNum + secondNum;
-            } else if (operator == '-') {
-                result = firstNum - secondNum;
-            } else if (operator == '*') {
-                result = firstNum * secondNum;
-            } else if (operator == '/') {
-                result = (double) firstNum / secondNum; // 소숫점 계산을 위해 (double) #2025-10-17, LV1 완료 이후
-//        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 것...
-//            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보임
-//            return;
-            } else {
-                System.out.println("사칙연산 입력 오류");
-                return;
-            }
-//            // 콘솔에 결과 출력 -> '보기좋은 코드'를 작성하기 위해 메인 메서드로 옮김
-//            System.out.println("결과: " + firstNum + operator + secondNum + " = " + result);
-
-            // result는 다른 세 변수들과 다르게 연산 이후에 도출 되기 때문에, 연산 이후 set
-            calcResult.setResult(result);
-
-            // 히스토리 타입의 컬렉션에 모든 요소 저장 (addHistory)
-            String record = firstNum + " " + operator + " " + secondNum + " = " + result;
-            calcResult.addHistory(record);
-
-        } catch (ArithmeticException e) {
-            if (operator == '/' && secondNum == 0) {
-                System.out.println("나눗셈 분모에 0을 입력해서는 안됨");
-            } else {
-                System.out.println("연산 오류 발생");
-            }
-        }
-        // return 연산 결과 반환 위치 옮김
-    }
+    // 연산 메서드를 Calculation으로 이동
+//    // #2025-10-17
+//    // 연산 메서드 분리, 결과 출력, 결과를 컬렉션 클래스로 반환
+//    // ######################### 연산 / 저장 메서드 #########################
+//    private static void calculate(int firstNum, int secondNum, char operator) {
+//
+// //        Calculator calcResult = new Calculator();
+//
+//        // 입력한 숫자, 기호, 결과를 객체에 계속 누적
+//        calcResult.setFirstNum(firstNum);
+//        calcResult.setSecondNum(secondNum);
+//        calcResult.setOperator(operator);
+//        // 나눗셈을 위해 int result = 0 -> double result = 0
+//        double result = 0;
+//
+//        // ------------------- 사칙 연산 -------------------
+//        try { //연산 오류가 발생할 경우 해당 오류에 대한 내용을 정제하여 출력
+//            if (operator == '+') {
+//                result = firstNum + secondNum;
+//            } else if (operator == '-') {
+//                result = firstNum - secondNum;
+//            } else if (operator == '*') {
+//                result = firstNum * secondNum;
+//            } else if (operator == '/') {
+//                result = (double) firstNum / secondNum; // 소숫점 계산을 위해 (double) #2025-10-17, LV1 완료 이후
+// //        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 것...
+// //            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보임
+// //            return;
+//            } else {
+//                System.out.println("사칙연산 입력 오류");
+//                return;
+//            }
+// //            // 콘솔에 결과 출력 -> '보기좋은 코드'를 작성하기 위해 메인 메서드로 옮김
+// //            System.out.println("결과: " + firstNum + operator + secondNum + " = " + result);
+//
+//            // result는 다른 세 변수들과 다르게 연산 이후에 도출 되기 때문에, 연산 이후 set
+//            calcResult.setResult(result);
+//
+//            // 히스토리 타입의 컬렉션에 모든 요소 저장 (addHistory)
+//            String record = firstNum + " " + operator + " " + secondNum + " = " + result;
+//            calcResult.addHistory(record);
+//
+//        } catch (ArithmeticException e) {
+//            if (operator == '/' && secondNum == 0) {
+//                System.out.println("나눗셈 분모에 0을 입력해서는 안됨");
+//            } else {
+//                System.out.println("연산 오류 발생");
+//            }
+//        }
+//        // return 연산 결과 반환 위치 옮김
+//    }
 
     // #2025-10-17
     // ######################### 데이터 삭제 메서드 #########################
