@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class App {
 
-    // ★ Calculator 객체를 main 전체에서 공유할 수 있도록 static 필드로 변경
+    //Calculator 객체를 main 전체에서 공유할 수 있도록 static 필드로 변경 #2025-10-17
     private static Calculator calcResult = new Calculator();
 
     public static void main(String[] args) {
@@ -13,7 +13,7 @@ public class App {
 
         System.out.println("Hello, Calculator!");
 
-        // ★ 실행 시 기존 연산 이력 출력
+        // 실행 시 기존 연산 이력 출력 #2025-10-17
         printHistory();  // 수정 추가
 
         // ------------------- exit 입력 전까지 반복하는 do-while문 -------------------
@@ -33,7 +33,7 @@ public class App {
 
             // 결과를 히스토리 컬렉션 객체에 담아서 반환 #2025-10-17
 //          Calculator calcResult = calculate(firstNum, secondNum, operator);
-            // ★ calculate() 결과를 공유 객체 calcResult에 누적 저장
+            // calculate() 결과를 공유 객체 calcResult에 누적 저장 #2025-10-17
             calculate(firstNum, secondNum, operator);
 
             // 결과 출력 (입력했던거 보이게) #2025-10-17
@@ -50,15 +50,12 @@ public class App {
 
     }
 
-
-
     // 김순철 튜터님 피드백 #2025-10-16-18:00
     // 가독성을 위해 ``반복 판단`` 메서드 분리
     // ######################### 반복 판단 메서드 #########################
     private static boolean isContinue() {
 
         Scanner sc = new Scanner(System.in);
-
 //        Calculator calcResult = new Calculator();
 
         System.out.println("더 계산하시겠습니까?" + "\n" + "exit : 종료" + "\n" +
@@ -86,7 +83,8 @@ public class App {
         calcResult.setFirstNum(firstNum);
         calcResult.setSecondNum(secondNum);
         calcResult.setOperator(operator);
-        double result = 0;  // 나눗셈을 위해 int result = 0 -> double result = 0 #2025-10-17, LV1 완료 이후
+        // 나눗셈을 위해 int result = 0 -> double result = 0
+        double result = 0;
 
         // ------------------- 사칙 연산 -------------------
         try { //연산 오류가 발생할 경우 해당 오류에 대한 내용을 정제하여 출력
@@ -108,7 +106,7 @@ public class App {
 //            // 콘솔에 결과 출력 -> '보기좋은 코드'를 작성하기 위해 메인 메서드로 옮김
 //            System.out.println("결과: " + firstNum + operator + secondNum + " = " + result);
 
-            // result는 다른 세가지 속성변수들과 다르게 연산 이후에 도출 되기 때문에, 연산 이후에 setter 해줌
+            // result는 다른 세 변수들과 다르게 연산 이후에 도출 되기 때문에, 연산 이후 set
             calcResult.setResult(result);
 
             // 히스토리 타입의 컬렉션에 모든 요소 저장 (addHistory)
@@ -122,10 +120,10 @@ public class App {
                 System.out.println("연산 오류 발생");
             }
         }
-
-        /* return 연산 결과 */
+        // return 연산 결과 반환 위치 옮김
     }
 
+    // #2025-10-17
     // ######################### 데이터 삭제 메서드 #########################
     public static void removeFirstHistory() {
         // Calculator 클래스에 저장된 연산 결과들 중 '가장 먼저 저장된 데이터'를 삭제하는 기능
@@ -137,12 +135,14 @@ public class App {
         if (calcResult.getHistory().isEmpty()) {
             System.out.println("비어있음");
         } else  {
-            calcResult.getHistory().removeFirst();
+            calcResult.getHistory().removeFirst();  // 첫번째 인덱스를 삭제
             System.out.println("가장 오래된 연산 기록(index[0])을 삭제했습니다.");
         }
 
     }
 
+    // #2025-10-17
+    // ######################### 데이터 출력 메서드 #########################
     private static void printHistory() {
         System.out.println("==== 연산 이력 ====");
         if (calcResult.getHistory().isEmpty()) {
