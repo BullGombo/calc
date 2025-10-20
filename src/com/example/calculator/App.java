@@ -39,11 +39,15 @@ public class App {
                     continue; // 다시 입력받기
                 }
 
+                // ======================= enum 적용 부분 #2025-10-20 =======================
+                // 사용자가 입력한 문자 연산자를 enum 타입으로 변환
+                Calculator.Operator operatorEnum = Calculator.Operator.fromChar(operator);
+
                 // 결과를 히스토리 컬렉션 객체에 담아서 반환 #2025-10-17
 //          Calculator calcResult = calculate(firstNum, secondNum, operator);
                 // calculate() 결과를 공유 객체 calcResult에 누적 저장 #2025-10-17
                 // Calculator 클래스의 calculate 메서드 호출 #2025-10-18
-                calcResult.calculate(firstNum, secondNum, operator);
+                calcResult.calculate(firstNum, secondNum, operatorEnum);
 
             } catch (NumberFormatException e) {
                 System.out.println("정수 입력란에 정수가 입력되지 않음");

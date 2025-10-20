@@ -12,10 +12,43 @@ public class Calculator {
     // 연산결과 정보 캡슐화를 위해 'private'을 씀
     private int firstNum;             // 첫 번째 피연산자
     private int secondNum;            // 두 번째 피연산자
-    private char operator;            // 연산자
+    // private char operator;            // 연산자
+    // ======================= enum으로 대체 #2025-10-20 =======================
+    private Operator operator;         // 연산자(enum 타입)
     private double result;            // 연산 결과 ( 이녀석만 '연산' 이후에 도출됨 )
     private List<String> history = new ArrayList<>();
 
+    // ######################### enum 추가 #########################
+    // 사칙연산을 관리하기 위한 enum 타입 #2025-10-20
+    public enum Operator {
+        ADD('+'),
+        SUBTRACT('-'),
+        MULTIPLY('*'),
+        DIVIDE('/');
+
+        private final char symbol;
+
+        Operator(char symbol) {
+            this.symbol = symbol;
+        }
+
+        public char getSymbol() {
+            return symbol;
+        }
+
+        // char 입력값을 enum으로 변환하는 정적 메서드
+        public static Operator fromChar(char c) {
+            for (Operator op : Operator.values()) {
+                if (op.symbol == c) return op;
+            }
+            throw new IllegalArgumentException("잘못된 연산자: " + c);
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(symbol);
+        }
+    }
 
     // ######################### 생성자 #########################
     // 생성자
@@ -41,7 +74,11 @@ public class Calculator {
     public int getSecondNum() {
         return secondNum;
     }
-    public char getOperator() {
+//    public char getOperator() {
+//        return operator;
+//    }
+    // 반환 타입 수정 #2025-10-20
+    public Operator getOperator() {
         return operator;
     }
     public double getResult() {
@@ -58,7 +95,11 @@ public class Calculator {
     public void setSecondNum(int secondNum) {
         this.secondNum = secondNum;
     }
-    public void setOperator(char operator) {
+//    public void setOperator(char operator) {
+//        this.operator = operator;
+//    }
+    // 매개변수 타입 수정 #2025-10-20
+    public void setOperator(Operator operator) {
         this.operator = operator;
     }
     public void setResult(double result) {
@@ -71,7 +112,7 @@ public class Calculator {
     // #2025-10-18   ( App.java에서 가져오고, static 등을 조금 수정함 )
     // 연산 메서드 분리, 결과 출력, 결과를 컬렉션 클래스로 반환
     // ######################### 연산 / 저장 메서드 #########################
-    public void calculate(int firstNum, int secondNum, char operator) {
+    public void calculate(int firstNum, int secondNum, Operator operator) {
 
 //        Calculator calcResult = new Calculator();
 
@@ -84,13 +125,13 @@ public class Calculator {
 
         // ------------------- 사칙 연산 -------------------
         try { //연산 오류가 발생할 경우 해당 오류에 대한 내용을 정제하여 출력
-            if (operator == '+') {
+            if (operator == Operator.ADD) {
                 result = firstNum + secondNum;
-            } else if (operator == '-') {
+            } else if (operator == Operator.SUBTRACT) {
                 result = firstNum - secondNum;
-            } else if (operator == '*') {
+            } else if (operator == Operator.MULTIPLY) {
                 result = firstNum * secondNum;
-            } else if (operator == '/') {
+            } else if (operator == Operator.DIVIDE) {
                 result = (double) firstNum / secondNum; // 소숫점 계산을 위해 (double) #2025-10-17, LV1 완료 이후
 //        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 것...
 //            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보임
@@ -106,11 +147,11 @@ public class Calculator {
             setResult(result);
 
             // 히스토리 타입의 컬렉션에 모든 요소 저장 (addHistory)
-            String record = firstNum + " " + operator + " " + secondNum + " = " + result;
+            String record = firstNum + " " + operator.getSymbol() + " " + secondNum + " = " + result;
             addHistory(record);
 
         } catch (ArithmeticException e) {
-            if (operator == '/' && secondNum == 0) {
+            if (operator == Operator.DIVIDE && secondNum == 0) {
                 System.out.println("나눗셈 분모에 0을 입력해서는 안됨");
                 // 입력받은 firstNum과 secondNum의 타입이 정수가 아닌 경우
 //            } else if (firstNum instanceof Integer || secondNum instanceof Integer) {
