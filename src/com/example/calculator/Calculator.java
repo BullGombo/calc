@@ -5,13 +5,18 @@ package com.example.calculator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Calculator {
+    // ======================= 제네릭 적용 #2025-10-20 =======================
+    // 기존: public class Calculator { ... }
+    // 변경: 여러 타입(int, double 등)을 처리하기 위해 제네릭 추가
+public class Calculator<T extends Number> { // #2025-10-20
 
     /* 연산 결과를 저장하는 컬렉션 타입 필드 선언 및 생성 */
     // ######################### 속성 #########################
     // 연산결과 정보 캡슐화를 위해 'private'을 씀
-    private int firstNum;             // 첫 번째 피연산자
-    private int secondNum;            // 두 번째 피연산자
+//    private int firstNum;             // 첫 번째 피연산자
+//    private int secondNum;            // 두 번째 피연산자
+    private T firstNum;             // int → T
+    private T secondNum;            // int → T
     // private char operator;            // 연산자
     // ======================= enum으로 대체 #2025-10-20 =======================
     private Operator operator;         // 연산자(enum 타입)
@@ -68,10 +73,10 @@ public class Calculator {
 
     // 게터
     // 피연산자 두개, 연산자 하나, 결과값 하나, 히스토리
-    public int getFirstNum() {
+    public T getFirstNum() {    // int → T
         return firstNum;
     }
-    public int getSecondNum() {
+    public T getSecondNum() {   // int → T
         return secondNum;
     }
 //    public char getOperator() {
@@ -89,10 +94,10 @@ public class Calculator {
     }
 
     // 세터
-    public void setFirstNum(int firstNum) {
+    public void setFirstNum(T firstNum) {   // int → T
         this.firstNum = firstNum;
     }
-    public void setSecondNum(int secondNum) {
+    public void setSecondNum(T secondNum) { // int → T
         this.secondNum = secondNum;
     }
 //    public void setOperator(char operator) {
@@ -112,7 +117,9 @@ public class Calculator {
     // #2025-10-18   ( App.java에서 가져오고, static 등을 조금 수정함 )
     // 연산 메서드 분리, 결과 출력, 결과를 컬렉션 클래스로 반환
     // ######################### 연산 / 저장 메서드 #########################
-    public void calculate(int firstNum, int secondNum, Operator operator) {
+    // 기존: public void calculate(int firstNum, int secondNum, Operator operator) {
+    public void calculate(T firstNum, T secondNum, Operator operator) {
+        // T타입으로 받을 수 있게 변경
 
 //        Calculator calcResult = new Calculator();
 
@@ -120,19 +127,23 @@ public class Calculator {
         setFirstNum(firstNum);
         setSecondNum(secondNum);
         setOperator(operator);
+
+        double num1 = firstNum.doubleValue();  //  double 변환
+        double num2 = secondNum.doubleValue(); //  double 변환
+
         // 나눗셈을 위해 int result = 0 -> double result = 0
         double result = 0;
 
         // ------------------- 사칙 연산 -------------------
         try { //연산 오류가 발생할 경우 해당 오류에 대한 내용을 정제하여 출력
             if (operator == Operator.ADD) {
-                result = firstNum + secondNum;
+                result = num1 + num2;
             } else if (operator == Operator.SUBTRACT) {
-                result = firstNum - secondNum;
+                result = num1 - num2;
             } else if (operator == Operator.MULTIPLY) {
-                result = firstNum * secondNum;
+                result = num1 * num2;
             } else if (operator == Operator.DIVIDE) {
-                result = (double) firstNum / secondNum; // 소숫점 계산을 위해 (double) #2025-10-17, LV1 완료 이후
+                result = num1 / num2; // 소숫점 계산을 위해 (double) #2025-10-17, LV1 완료 이후
 //        } else if (operator == '/' && secondNum == 0) {       // 절차상 절대 실행 될 수 없는 dead code 라는 것...
 //            System.out.println("나눗셈 분모가 0");              // try - catch 문의 catch 안에 처리하는게 다른 오류를 같이 잡기에도 좋아보임
 //            return;
@@ -143,15 +154,20 @@ public class Calculator {
 //            // 콘솔에 결과 출력 -> '보기좋은 코드'를 작성하기 위해 메인 메서드로 옮김
 //            System.out.println("결과: " + firstNum + operator + secondNum + " = " + result);
 
+
+            // ------------------- 반올림 처리 추가 #2025-10-20 -------------------
+            // Math.round(값 * 10^6) / 10^6 → 소수점 6자리 반올림
+            result = Math.round(result * 1_000_000.0) / 1_000_000.0;
+
             // result는 다른 세 변수들과 다르게 연산 이후에 도출 되기 때문에, 연산 이후 set
             setResult(result);
 
             // 히스토리 타입의 컬렉션에 모든 요소 저장 (addHistory)
-            String record = firstNum + " " + operator.getSymbol() + " " + secondNum + " = " + result;
+            String record = num1 + " " + operator.getSymbol() + " " + num2 + " = " + result;
             addHistory(record);
 
         } catch (ArithmeticException e) {
-            if (operator == Operator.DIVIDE && secondNum == 0) {
+            if (operator == Operator.DIVIDE && num2 == 0) {
                 System.out.println("나눗셈 분모에 0을 입력해서는 안됨");
                 // 입력받은 firstNum과 secondNum의 타입이 정수가 아닌 경우
 //            } else if (firstNum instanceof Integer || secondNum instanceof Integer) {
