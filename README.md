@@ -144,20 +144,15 @@ public class Calculator<T extends Number> { // #2025-10-20
         }
 ...
 
-
-
+```
 ## 🚀 실행 방법
 
 1. 프로젝트 클론
-
-
 ```bash
 git clone [repository-url]
 ```
 
-
 2. 각 패키지 내에서 컴파일 및 실행
-
 
 
 ## 📝 사용 예시
