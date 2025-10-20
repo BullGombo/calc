@@ -4,10 +4,11 @@ package com.example.calculator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-    // ======================= 제네릭 적용 #2025-10-20 =======================
+// ======================= 제네릭 적용 #2025-10-20 =======================
     // 기존: public class Calculator { ... }
-    // 변경: 여러 타입(int, double 등)을 처리하기 위해 제네릭 추가
+    // 변경: 여러 타입의 숫자를 (int, double 등)을 처리하기 위해 제네릭 extends Number 추가
 public class Calculator<T extends Number> { // #2025-10-20
 
     /* 연산 결과를 저장하는 컬렉션 타입 필드 선언 및 생성 */
@@ -54,6 +55,7 @@ public class Calculator<T extends Number> { // #2025-10-20
             return String.valueOf(symbol);
         }
     }
+
 
     // ######################### 생성자 #########################
     // 생성자
@@ -153,7 +155,7 @@ public class Calculator<T extends Number> { // #2025-10-20
             }
 //            // 콘솔에 결과 출력 -> '보기좋은 코드'를 작성하기 위해 메인 메서드로 옮김
 //            System.out.println("결과: " + firstNum + operator + secondNum + " = " + result);
-
+                // result 저장 직전에 반올림 하는 방식으로 채택
 
             // ------------------- 반올림 처리 추가 #2025-10-20 -------------------
             // Math.round(값 * 10^6) / 10^6 → 소수점 6자리 반올림
@@ -178,5 +180,31 @@ public class Calculator<T extends Number> { // #2025-10-20
         }
         // return 연산 결과 반환 위치 옮김
     }
+
+    // 2025-10-20
+    // 저장된 연산 결과들 중 Scanner로 입력받은 값보다 큰 결과값 들을 출력
+    // Calculator 클래스에 위 요구사항을 만족하는 조회 메서드를 구현
+    // 메서드를 구현할 때 Lambda & Stream을 활용
+//        Calculator 클래스에 메서드 만들기
+//        저장된 결과 리스트 접근
+//        stream() 변환
+//        filter(람다)로 기준값 초과만 남기기
+//        forEach로 출력
+//        main에서 Scanner로 값 입력 → 메서드 호출되도록 처리
+
+        // ######################### 현재 입력보다 높은 연산값 조회 #########################
+        public void printHigherResults(double value) {
+            List<Double> higherResults = getHistory().stream()   // 1. 데이터 흐름 준비
+                    //history가 List<String>, result는 String 타입
+                    .map(record -> {  // "10 + 5 = 15.0" → "15.0"
+                    // "="를 기준으로 문자열을 분리, [1]번째 인덱스인 결과값을 Double로 반환
+                        String[] parts = record.split(" = ");
+                        return Double.parseDouble(parts[1]);
+                    })                                            // 2. 타입 변환
+                    .filter(result -> result > value)         // 2. 비교 연산
+                    .collect(Collectors.toList());                // 3. 최종 연산 (수집)
+            System.out.println("입력된 연산보다 높은 값 조회 = " + higherResults);
+
+        }
 
 }

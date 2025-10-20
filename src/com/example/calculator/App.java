@@ -76,6 +76,9 @@ public class App {
             // 연산 후 컬렉션 이력 출력 #2025-10-17
             printHistory();
 
+            // 현재 입력된 연산보다 높은 연산 값 조회
+            calcResult.printHigherResults(calcResult.getResult());
+
         } while (isContinue()); // false 전달시 반복 정지
 
     }
