@@ -17,25 +17,38 @@ public class App {
         printHistory();  // 수정 추가
 
         // ------------------- exit 입력 전까지 반복하는 do-while문 -------------------
+        // ------------------- 정수 두개와 사칙연산 기호 입력 -------------------
         do {
-            // ------------------- 정수 두개와 사칙연산 기호 입력 -------------------
-            System.out.print("첫 번째 숫자를 입력하세요: ");
-            // Scanner를 사용하여 양의 정수를 입력받고 적합한 타입의 변수에 저장합니다.
-            int firstNum = Integer.parseInt(sc.nextLine()); // Integer.parseInt() : 문자열(String)을 정수(int)로 변환할 때 사용하는 메서드
+            // 입력란 오입력 예외처리 + 편의 개선 #2025-10-20
+            try {
+                System.out.print("첫 번째 숫자를 입력하세요: ");
+                // Scanner를 사용하여 양의 정수를 입력받고 적합한 타입의 변수에 저장합니다.
+                int firstNum = Integer.parseInt(sc.nextLine()); // Integer.parseInt() : 문자열(String)을 정수(int)로 변환할 때 사용하는 메서드
 
-            System.out.print("두 번째 숫자를 입력하세요: ");
-            // Scanner를 사용하여 양의 정수를 입력받고 적합한 타입의 변수에 저장합니다.
-            int secondNum = Integer.parseInt(sc.nextLine());
+                System.out.print("두 번째 숫자를 입력하세요: ");
+                // Scanner를 사용하여 양의 정수를 입력받고 적합한 타입의 변수에 저장합니다.
+                int secondNum = Integer.parseInt(sc.nextLine());
 
-            System.out.print("사칙연산 기호를 입력하세요: ");
-            // 사칙연산 기호를 적합한 타입으로 선언한 변수에 저장합니다.
-            char operator = sc.nextLine().charAt(0);    // charAt(0) : 문자열(String)에서 특정 위치의 문자를 가져오는 메서드
+                System.out.print("사칙연산 기호를 입력하세요: ");
+                // 사칙연산 기호를 적합한 타입으로 선언한 변수에 저장합니다.
+                char operator = sc.nextLine().charAt(0);    // charAt(0) : 문자열(String)에서 특정 위치의 문자를 가져오는 메서드
 
-            // 결과를 히스토리 컬렉션 객체에 담아서 반환 #2025-10-17
+                // 사칙연산 기호 유효성 검사 추가 #2025-10-20
+                if (operator != '+' && operator != '-' && operator != '*' && operator != '/') {
+                    System.out.println("잘못된 사칙연산 기호 (+, -, *, / 만 입력 가능)");
+                    continue; // 다시 입력받기
+                }
+
+                // 결과를 히스토리 컬렉션 객체에 담아서 반환 #2025-10-17
 //          Calculator calcResult = calculate(firstNum, secondNum, operator);
-            // calculate() 결과를 공유 객체 calcResult에 누적 저장 #2025-10-17
-            // Calculator 클래스의 calculate 메서드 호출 #2025-10-18
-            calcResult.calculate(firstNum, secondNum, operator);
+                // calculate() 결과를 공유 객체 calcResult에 누적 저장 #2025-10-17
+                // Calculator 클래스의 calculate 메서드 호출 #2025-10-18
+                calcResult.calculate(firstNum, secondNum, operator);
+
+            } catch (NumberFormatException e) {
+                System.out.println("정수 입력란에 정수가 입력되지 않음");
+                continue;
+            }
 
             // 결과 출력 (입력했던거 보이게) #2025-10-17
             // System.out.println("결과: " + result);
@@ -43,10 +56,10 @@ public class App {
                     + " " + calcResult.getOperator()
                     + " " + calcResult.getSecondNum()
                     + " = " + calcResult.getResult());
-            
+
             // 연산 후 컬렉션 이력 출력 #2025-10-17
             printHistory();
-            
+
         } while (isContinue()); // false 전달시 반복 정지
 
     }

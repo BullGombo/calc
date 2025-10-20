@@ -112,6 +112,9 @@ public class Calculator {
         } catch (ArithmeticException e) {
             if (operator == '/' && secondNum == 0) {
                 System.out.println("나눗셈 분모에 0을 입력해서는 안됨");
+                // 입력받은 firstNum과 secondNum의 타입이 정수가 아닌 경우
+//            } else if (firstNum instanceof Integer || secondNum instanceof Integer) {
+//                System.out.println("정수 입력란에 정수가 입력되지 않음");
             } else {
                 System.out.println("연산 오류 발생");
             }
