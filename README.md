@@ -100,9 +100,6 @@ public static void removeFirstHistory() { ... }
         }
     }
 
-...
-
-public abstract int apply(int num1, int num2);
 ```
 
 
